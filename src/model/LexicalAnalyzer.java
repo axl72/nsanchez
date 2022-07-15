@@ -1,5 +1,7 @@
 package model;
 
+import javafx.util.Pair;
+
 public class LexicalAnalyzer {
 
     private StringBuffer sourceString;
@@ -16,14 +18,14 @@ public class LexicalAnalyzer {
     }
 
 
-    public String getNextToken(){
+    public Pair<String, Short> getNextToken(){
         token = new StringBuffer();
-
+        Short value = 0;
         currentChar = sourceString.charAt(index);
 
         if(currentChar > 'a' && currentChar <'z' || currentChar >'A' && currentChar < 'Z'){
+            value = 1;
             nextChar();
-
             while(currentChar >= 'a' && currentChar <='z' || currentChar >= 'A' && currentChar <= 'Z' || currentChar >= '0' && currentChar <= '9' || currentChar == '-' || currentChar == '_'){
                 nextChar();
             }
@@ -31,6 +33,7 @@ public class LexicalAnalyzer {
         }
 
         else if(currentChar > '0' && currentChar <'9'){
+            value = 2;
             nextChar();
             while(currentChar > 0 && currentChar < '9'){
                 nextChar();
@@ -39,18 +42,20 @@ public class LexicalAnalyzer {
         }
 
         else if(currentChar == '-' || currentChar == '*' || currentChar == '/' || currentChar == '+'){
+            value = 3;
             nextChar();
         }
         else if(currentChar == '\\'){
+            value = -1;
             if(sourceString.charAt(index+1) == '0')
-                return "\\0";
+                return new Pair<String, Short>("\\0", value);
         }
 
         else
             nextChar();
 
         currentToken = token.toString();
-        return currentToken;
+        return new Pair<String, Short>(currentToken, value);
     }
 
     private void nextChar(){
@@ -61,10 +66,15 @@ public class LexicalAnalyzer {
 
     public static void main(String[]args){
         LexicalAnalyzer lex = new LexicalAnalyzer("HolaMUndo321-123;3");
-        System.out.println(lex.getNextToken());
-        System.out.println(lex.getNextToken());
-        System.out.println(lex.getNextToken());
-        System.out.println(lex.getNextToken());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+        System.out.println(lex.getNextToken().getValue());
+
     }
 
 
